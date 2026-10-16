@@ -10,18 +10,18 @@
 .volume>label{display:flex;flex-direction:column;justify-content:space-between}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
-.volume input[type=range]{appearance:auto;-webkit-appearance:auto;width:100%;height:18px;padding:0;margin-top:7px;accent-color:var(--green);cursor:pointer;letter-spacing:normal}
+.volume input[type=range],.settings-grid input[type=range]{appearance:auto;-webkit-appearance:auto;width:100%;height:18px;padding:0;margin-top:7px;accent-color:var(--green);cursor:pointer;letter-spacing:normal}
 </style>
 </head>
 <body><main>
 <header><div><h1>Stack calculator</h1><span class="muted">USD · Example inputs</span></div><button id="reset" class="button">Reset</button></header>
 <section class="volume" aria-label="Monthly usage">
-<label for="students">Students<input id="students" data-path="students" type="number" min="0" max="10000000" step="1"><input id="students-slider" data-path="students" aria-label="Number of students" type="range" min="0" max="10000" step="1"></label>
-<label for="frequency">Avg. sessions / student / month<input id="frequency" data-path="frequency" type="number" min="0" max="1000" step="any"></label>
-<label for="price">Price / session<div class="bare-input"><span>$</span><input id="price" data-path="price" type="number" min="0" max="1000000" step="any"></div></label>
-<label for="minutes">Minutes / session<input id="minutes" data-path="minutes" type="number" min="1" max="1440" step="any"></label>
+<label for="students">Students<input id="students" data-path="students" type="number" min="0" max="10000000" step="1"><input id="students-slider" data-range-max="10000" data-path="students" aria-label="Number of students" type="range" min="0" max="10000" step="1"></label>
+<label for="frequency">Avg. sessions / student / month<input id="frequency" data-path="frequency" type="number" min="0" max="1000" step="any"><input id="frequency-slider" data-path="frequency" aria-label="Average sessions per student per month" type="range" min="0" max="40" data-range-max="40" step="0.25"></label>
+<label for="price">Price / session<div class="bare-input"><span>$</span><input id="price" data-path="price" type="number" min="0" max="1000000" step="any"></div><input id="price-slider" data-path="price" aria-label="Price per session" type="range" min="0" max="500" data-range-max="500" step="1"></label>
+<label for="minutes">Minutes / session<input id="minutes" data-path="minutes" type="number" min="1" max="1440" step="any"><input id="minutes-slider" data-path="minutes" aria-label="Minutes per session" type="range" min="1" max="180" data-range-max="180" step="1"></label>
 </section>
-<details class="common-settings"><summary>Settings<span data-icon="chevron"></span></summary><div class="settings-grid"><label for="participants">People per call<input id="participants" data-path="participants" type="number" min="1" max="1000" step="1" title="Include the advisor"></label><label for="card">Card fee · % of session price<input id="card" data-path="card" type="number" min="0" max="100" step="any"></label></div></details>
+<details class="common-settings"><summary>Settings<span data-icon="chevron"></span></summary><div class="settings-grid"><label for="participants">People per call<input id="participants" data-path="participants" type="number" min="1" max="1000" step="1" title="Include the advisor"><input id="participants-slider" data-path="participants" aria-label="People per call" type="range" min="1" max="10" data-range-max="10" step="1"></label><label for="card">Card fee · % of session price<input id="card" data-path="card" type="number" min="0" max="100" step="any"><input id="card-slider" data-path="card" aria-label="Card fee percentage" type="range" min="0" max="10" data-range-max="10" step="0.1"></label></div></details>
 <div class="layout">
 <section class="panel stack-panel"><h2>Stack settings</h2><div class="stack-table-wrap"><table class="stack-table"><thead><tr><th><span class="sr-only">Setting</span></th><th><span class="dot current"></span><input id="current-name" data-path="current.name" aria-label="Current stack name" maxlength="40"></th><th><span class="dot custom"></span><input id="custom-name" data-path="custom.name" aria-label="Custom stack name" maxlength="40"></th></tr></thead><tbody id="stack-inputs"></tbody><tfoot><tr><th>Monthly costs</th><td id="current-total">—</td><td id="custom-total">—</td></tr></tfoot></table></div></section>
 <div class="results">
@@ -134,7 +134,7 @@ function toast(text){$('#toast').textContent=text;$('#toast').hidden=false;clear
 function get(path){return path.split('.').reduce((value,key)=>value[key],state);}
 function set(path,value){const p=path.split('.');if(p.length===2)state[p[0]][p[1]]=value;else state[p[0]]=value;}
 function sync(){
-  $$('[data-path]').forEach(el=>el.value=get(el.dataset.path));
+  $$('[data-path]').forEach(el=>{if(el.type==='range')el.max=Math.max(Number(el.dataset.rangeMax),get(el.dataset.path));el.value=get(el.dataset.path);});
 }
 const fields=[['take','Revenue share','% after card fees'],['software','Software','$ / month'],['crm','CRM','$ / month'],['infrastructure','Hosting','$ / month'],['other','Other','$ / session']];
 function buildInputs(){
@@ -161,9 +161,11 @@ function readTiers(){
   if(!error){state[pricingStack].tiers=tiers;update();}
 }
 function update(){
-  $('#students-slider').max=Math.max(10000,state.students);
-  $('#students-slider').value=state.students;
-  $('#students').value=state.students;
+  $$('input[type=range][data-path]').forEach(el=>{
+    const value=get(el.dataset.path);
+    el.max=Math.max(Number(el.dataset.rangeMax),value);el.value=value;
+    const number=$('#'+el.dataset.path);if(document.activeElement!==number)number.value=value;
+  });
   const a=calculate(state,state.current),b=calculate(state,state.custom),difference=a.services-b.services;
   $('#savings-label').textContent=difference>=0?'Monthly savings':'Monthly increase';
   $('#savings-value').textContent=money(Math.abs(difference));$('#savings-value').classList.toggle('negative',difference<0);
