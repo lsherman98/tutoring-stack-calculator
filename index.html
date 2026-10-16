@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f8fa"><meta name="description" content="Compare tutoring platform costs and revenue.">
+<title>Stack calculator</title><style>:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#20252b;background:#f7f8fa;font-size:13px;font-synthesis:none;--green:#24856c;--gray:#9aa3b1;--line:#e8ebef;--muted:#7c8591}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit;color:inherit}button,summary{cursor:pointer}button{transition:background .15s}button:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid #24856c;outline-offset:3px}input:focus-visible,select:focus-visible{outline:2px solid #a0c9be;outline-offset:1px}input[type=number]{appearance:textfield;-moz-appearance:textfield}input::-webkit-inner-spin-button,input::-webkit-outer-spin-button{appearance:none;margin:0}input{min-width:0}input,select{border:1px solid #e1e5eb;border-radius:6px;background:#fff;padding:9px 10px;width:100%}button svg,summary svg{width:15px;height:15px;display:block}button svg{flex:none}button:disabled{opacity:.4;cursor:default}[hidden]{display:none!important}h1,h2,p{margin:0}h1{font-size:22px;letter-spacing:-.65px;font-weight:650}h2{font-size:13px;font-weight:600}main{max-width:1240px;padding:38px 30px 50px;margin:0 auto}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}header .muted{font-size:11px;display:block;margin-top:5px}.muted{color:var(--muted)}.actions{display:flex;align-items:center;gap:7px}.button{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid #e0e5e9;background:#fff;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:500;min-height:34px}.button:hover{background:#f0f3f5}.primary{background:#26372f;color:#fff;border-color:#26372f}.primary:hover{background:#3b5045}.icon-button{width:34px;padding:6px;font-size:22px;color:#77818a}.menu-wrap{position:relative}.menu{position:absolute;right:0;top:40px;z-index:10;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 30px #20252b13;padding:5px;width:170px}.menu button{border:0;background:transparent;width:100%;text-align:left;font-size:12px;border-radius:4px;padding:9px}.menu button:hover{background:#f2f5f6}.volume{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid var(--line);border-radius:10px;padding:21px 6px}.volume>label{font-size:11px;color:var(--muted);padding:0 24px;border-right:1px solid var(--line)}.volume>label:last-child{border:0}.volume input{display:block;padding:0;border:0;border-radius:0;font-size:28px;letter-spacing:-.7px;font-weight:550;line-height:1.35;margin-top:9px;color:#272e35;max-width:100%;background:transparent}.bare-input{display:flex;align-items:center;gap:2px}.bare-input>span{font-size:22px;margin-top:8px;color:#abb2bc}.common-settings{margin:9px 0 25px}summary{list-style:none;user-select:none}summary::-webkit-details-marker{display:none}.common-settings>summary{display:flex;align-items:center;justify-content:flex-end;gap:6px;font-size:11px;color:#929aa5;width:max-content;margin-left:auto;padding:5px 0}summary svg{width:12px;height:12px}details[open]>summary>svg{transform:rotate(180deg)}.settings-grid{display:grid;grid-template-columns:repeat(2,210px);justify-content:end;gap:14px;margin:9px 0 15px}.settings-grid label{font-size:11px;color:var(--muted)}.settings-grid input{margin-top:7px;font-size:12px}.layout{display:grid;grid-template-columns:390px minmax(0,1fr);gap:24px;align-items:start}.panel{background:#fff;border:1px solid var(--line);border-radius:10px}.stack-panel{padding:20px}.stack-panel h2{margin:0 0 15px}.stack-table{border-collapse:collapse;width:100%;font-size:11px;table-layout:fixed;font-variant-numeric:tabular-nums}.stack-table thead th:first-child{width:42%}.stack-table thead th:not(:first-child){width:29%;position:relative;padding:0 4px 14px 14px}.stack-table thead input{font-size:11px;font-weight:550;padding:3px 0;border:0;border-bottom:1px dashed #dce1e6;border-radius:0;text-align:right}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;flex:none}.current{background:var(--gray)}.custom{background:var(--green)}.stack-table thead .dot{position:absolute;top:8px;left:2px}.stack-table td,.stack-table tbody th{padding:7px 4px;vertical-align:middle}.stack-table th{text-align:left;font-weight:450}.stack-table tbody th{padding-left:0;color:#68727f;line-height:1.5}.row-unit{display:block;color:#a0a8b3;font-size:10px}.stack-table td input{font-size:12px;text-align:right;padding:8px;width:100%;background:#fcfcfd;border-color:#e8ebef}.stack-table td input:hover{border-color:#ccd4dc}.stack-table tfoot th,.stack-table tfoot td{border-top:1px solid var(--line);padding:17px 4px 1px;font-size:14px;font-weight:600;text-align:right;letter-spacing:-.3px}.stack-table tfoot th{text-align:left;font-size:11px;letter-spacing:0}.stack-table tfoot td:last-child{color:var(--green)}.video-button{background:#f8fafb;border:1px solid #e4e8ed;border-radius:6px;padding:8px 6px;width:100%;font-size:11px;white-space:nowrap;color:#657480;display:flex;justify-content:flex-end;align-items:center;gap:5px;min-height:33px}.video-button:hover{background:#edf3f1;border-color:#c6dad4}.video-button svg{width:10px;height:10px;color:#9caaa5}.results{min-width:0}.metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin:3px 0 24px;padding:0 4px}.metrics>div{border-right:1px solid #e0e5e9;padding-right:8px}.metrics>div:last-child{border:0}.metrics span{display:block;font-size:11px;color:#8b94a0}.metrics strong{display:block;font-size:29px;font-weight:550;letter-spacing:-1px;margin-top:8px;line-height:1.2;overflow-wrap:anywhere}.metrics>div:first-child strong{color:var(--green)}.chart-panel{padding:20px 22px 15px}.chart-head{display:flex;align-items:center;justify-content:space-between;gap:15px}.segmented{display:flex;background:#f1f3f5;padding:3px;border-radius:5px}.segmented button{font-size:10px;border:0;background:transparent;border-radius:4px;padding:5px 12px;color:#929aa4}.segmented button.active{color:#47535e;background:#fff;box-shadow:0 1px 3px #20252b12}.chart-toolbar{margin:23px 0 7px;display:flex;align-items:center;justify-content:space-between;gap:12px}.legend{display:flex;gap:20px;color:#7e8895;font-size:11px;min-width:0}.legend>span{display:flex;align-items:center;gap:7px;min-width:0}.legend>span>span{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chart-toolbar select{width:auto;padding:5px 7px;font-size:10px;color:#77828f;background:#fff;border-color:#e7ebef}.chart-container{position:relative}.chart-container svg{display:block;width:100%;height:auto;overflow:visible}.chart-axis{text-align:right;font-size:10px;color:#a1a9b3;margin-top:0}.chart-tooltip{position:absolute;top:20px;left:20px;background:#fff;border:1px solid #dce4e1;border-radius:6px;padding:10px 13px;box-shadow:0 5px 20px #20252b12;pointer-events:none;font-size:11px;line-height:1.8;z-index:2;max-width:230px;overflow-wrap:anywhere}.chart-tooltip strong{display:block;font-weight:550;font-size:11px;margin-bottom:2px}.custom-text{color:var(--green)}.current-text{color:#929ca8}.growth-settings{display:grid;grid-template-columns:1fr 1.35fr .85fr;gap:10px;margin:12px 0 22px;padding:13px;background:#f8fafb;border-radius:6px}.growth-settings label{font-size:9px;color:#8a94a0;position:relative}.growth-settings input,.growth-settings select{font-size:11px;padding:7px 9px;display:block;margin-top:6px}.growth-settings label>span{position:absolute;bottom:7px;right:8px;color:#a1aab4}.growth-settings input{padding-right:23px}.breakdown{margin-top:14px;overflow:hidden}.breakdown>summary{font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;color:#808b97}.table-scroll{overflow:auto;padding:0 20px}.breakdown-table{width:100%;border-collapse:collapse;text-align:right;font-size:11px;font-variant-numeric:tabular-nums}.breakdown-table th{font-size:10px;font-weight:450;color:#98a2ad;border-bottom:1px solid #edf0f3;padding:4px 0 12px}.breakdown-table th:first-child,.breakdown-table td:first-child{text-align:left;width:45%}.breakdown-table td{padding:10px 0;border-bottom:1px solid #f1f3f5;color:#667280}.breakdown-table tr:last-child td{border:0;color:#2f443b;font-weight:600}.calculation-note{font-size:10px;color:#9ba5ae;padding:10px 20px 17px;line-height:1.65}.negative{color:#ae6b66!important}dialog{width:490px;max-width:calc(100% - 32px);max-height:85vh;border:1px solid #dde4e4;border-radius:12px;padding:23px;color:#48555f;box-shadow:0 15px 80px #15292320}dialog::backdrop{background:#19292145;backdrop-filter:blur(3px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px}.dialog-head h2{font-size:16px;font-weight:550;letter-spacing:-.3px}.dialog-head .icon-button{border:0;background:transparent;min-height:30px}.pricing-mode{display:block;width:100%;font-size:12px;margin:0 0 18px}.pricing-hourly{font-size:11px;color:#81908a}.pricing-hourly input{margin:8px 0 0}.tier-header,.tier-row{display:grid;grid-template-columns:1.3fr 1fr 22px;gap:10px;align-items:center}.tier-header{font-size:10px;color:#96a09e;margin-bottom:8px}.tier-row{margin:7px 0}.tier-row input{font-size:12px;padding:8px}.tier-row input[readonly]{background:#f5f7f7;color:#9aa5a1;border-color:transparent}.tier-row button{border:0;background:transparent;font-size:17px;color:#a1aba7;padding:0}.tier-error{font-size:11px;color:#ae6b66;margin:12px 0}.tier-actions{display:flex;justify-content:space-between;margin:16px 0 12px;gap:10px}.tier-actions .button{font-size:11px;padding:7px 10px;min-height:30px}.pricing-foot{border-top:1px solid var(--line);padding-top:15px;margin-top:20px;display:flex;align-items:center;justify-content:space-between;color:#8b9892;font-size:11px}.pricing-foot strong{font-size:15px;font-weight:550;color:#3b6253}.daily-link{display:block;color:#9aa5a1;font-size:10px;text-decoration:none;width:max-content;margin-top:15px}.daily-link:hover{text-decoration:underline}.full-width{width:100%}.share-url{display:flex;gap:8px;margin-bottom:18px}.share-url input{font-size:11px}.share-note{font-size:11px;text-align:center;margin-top:12px}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#283d32;color:#fff;border-radius:7px;padding:12px 18px;font-size:12px;z-index:100;box-shadow:0 5px 20px #20382e20;max-width:90vw;text-align:center}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:1050px){main{padding:28px 23px 40px}.layout{grid-template-columns:350px minmax(0,1fr);gap:18px}.stack-panel{padding:18px 15px}.stack-table thead th:first-child{width:40%}.stack-table thead th:not(:first-child){width:30%}.metrics{gap:10px}.metrics span{font-size:10px}.metrics strong{font-size:25px}.chart-panel{padding:18px 17px 13px}.legend{gap:12px;font-size:10px}.legend>span>span{max-width:90px}.growth-settings{grid-template-columns:1fr 1fr;gap:10px}.growth-settings label:last-child{grid-column:1/-1}}
+@media(max-width:800px){main{padding:23px 19px 35px}header{margin-bottom:22px}h1{font-size:21px}.layout{grid-template-columns:1fr;gap:25px}.results{grid-row:1}.metrics{margin-bottom:22px;padding:0;gap:17px}.metrics span{font-size:11px}.metrics strong{font-size:27px}.chart-panel{padding:18px 20px 14px}.legend{font-size:11px}.legend>span>span{max-width:130px}.volume{padding:18px 0}.volume>label{padding:0 18px;font-size:10px}.volume input{font-size:25px}.bare-input>span{font-size:21px}.stack-panel{padding:20px}.stack-table{font-size:12px}.stack-table thead input{font-size:12px}.stack-table td input{font-size:13px}.stack-table td,.stack-table tbody th{padding-top:9px;padding-bottom:9px}.stack-table tfoot td{font-size:16px}.stack-table thead th:first-child{width:44%}.stack-table thead th:not(:first-child){width:28%}.common-settings{margin-bottom:22px}}
+@media(max-width:480px){main{padding:21px 16px 32px}h1{font-size:20px}header .muted{font-size:10px}.actions{gap:5px}.button{font-size:11px;padding:7px 10px;min-height:32px}.icon-button{width:30px;padding:5px}.volume{grid-template-columns:1fr 1fr;padding:17px 0;row-gap:20px}.volume>label{padding:0 19px;font-size:10px}.volume>label:nth-child(2){border-right:0}.volume input{font-size:27px;margin-top:5px}.bare-input>span{margin-top:5px}.metrics{gap:10px;margin:0 0 20px}.metrics span{font-size:9px;line-height:1.5}.metrics strong{font-size:23px;letter-spacing:-.9px}.metrics>div{padding-right:7px}.chart-panel{padding:17px 15px 13px}.chart-head h2{font-size:12px}.legend{font-size:10px;gap:13px}.legend>span>span{max-width:95px}.chart-toolbar{margin-top:20px}.chart-axis{font-size:9px}.settings-grid{grid-template-columns:1fr 1fr;gap:10px;justify-content:normal}.settings-grid label{font-size:10px}.settings-grid input{font-size:12px}.stack-panel{padding:20px 17px}.stack-table{font-size:11px}.stack-table thead th:first-child{width:40%}.stack-table thead th:not(:first-child){width:30%}.stack-table thead input{font-size:11px}.stack-table td input{font-size:12px;padding:8px}.stack-table td,.stack-table tbody th{padding-top:8px;padding-bottom:8px}.video-button{font-size:10px}.stack-table tfoot td{font-size:14px}.row-unit{font-size:9px}.growth-settings{grid-template-columns:1fr 1fr;padding:10px}.growth-settings label:last-child{grid-column:1/-1}.growth-settings label{font-size:8px}.table-scroll{padding:0 15px}.breakdown-table{font-size:10px}.calculation-note{padding:10px 15px 16px;font-size:9px}.breakdown-table th:first-child,.breakdown-table td:first-child{width:47%}dialog{padding:19px}.tier-header{font-size:9px}.tier-row input{font-size:11px}.share-url{flex-direction:column}.dialog-head h2{font-size:15px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body><main>
+<header><div><h1>Stack calculator</h1><span class="muted">USD · Example inputs</span></div><button id="reset" class="button">Reset</button></header>
+<section class="volume" aria-label="Monthly usage">
+<label for="students">Students<input id="students" data-path="students" type="number" min="0" max="10000000" step="1"></label>
+<label for="sessions">Sessions / month<input id="sessions" type="number" min="0" max="10000000000" step="any"></label>
+<label for="price">Price / session<div class="bare-input"><span>$</span><input id="price" data-path="price" type="number" min="0" max="1000000" step="any"></div></label>
+<label for="minutes">Minutes / session<input id="minutes" data-path="minutes" type="number" min="1" max="1440" step="any"></label>
+</section>
+<details class="common-settings"><summary>Settings<span data-icon="chevron"></span></summary><div class="settings-grid"><label for="participants">People per call<input id="participants" data-path="participants" type="number" min="1" max="1000" step="1" title="Include the advisor"></label><label for="card">Card fee · % of session price<input id="card" data-path="card" type="number" min="0" max="100" step="any"></label></div></details>
+<div class="layout">
+<section class="panel stack-panel"><h2>Stack settings</h2><div class="stack-table-wrap"><table class="stack-table"><thead><tr><th><span class="sr-only">Setting</span></th><th><span class="dot current"></span><input id="current-name" data-path="current.name" aria-label="Current stack name" maxlength="40"></th><th><span class="dot custom"></span><input id="custom-name" data-path="custom.name" aria-label="Custom stack name" maxlength="40"></th></tr></thead><tbody id="stack-inputs"></tbody><tfoot><tr><th>Monthly costs</th><td id="current-total">—</td><td id="custom-total">—</td></tr></tfoot></table></div></section>
+<div class="results">
+<section class="metrics" aria-label="Monthly results"><div><span id="savings-label">Monthly savings</span><strong id="savings-value">—</strong></div><div><span>Custom cost / session</span><strong id="session-cost">—</strong></div><div><span>Custom net / month</span><strong id="custom-net">—</strong></div></section>
+<section class="panel chart-panel"><div class="chart-head"><h2 id="chart-title">Costs at scale</h2><div class="segmented" aria-label="Chart view"><button data-view="scale" class="active" aria-pressed="true">Scale</button><button data-view="time" aria-pressed="false">Time</button></div></div><div class="chart-toolbar"><div class="legend"><span><i class="dot current"></i><span data-stack-name="current">Current</span></span><span><i class="dot custom"></i><span data-stack-name="custom">Custom</span></span></div><label class="sr-only" for="chart-metric">Chart metric</label><select id="chart-metric"><option value="services">Costs</option><option value="net">Net revenue</option></select></div>
+<div id="growth-settings" class="growth-settings" hidden><label for="studentGrowth">Student growth / mo<input id="studentGrowth" data-path="studentGrowth" type="number" min="-50" max="100" step="any"><span>%</span></label><label for="sessionGrowth">Session frequency growth / mo<input id="sessionGrowth" data-path="sessionGrowth" type="number" min="-50" max="100" step="any"><span>%</span></label><label for="months">Period<select id="months" data-path="months"><option value="12">12 months</option><option value="24">24 months</option><option value="36">36 months</option></select></label></div>
+<div class="chart-container" id="chart-container"><svg id="chart" viewBox="0 0 720 320" role="img"></svg><div id="chart-tooltip" class="chart-tooltip" hidden></div></div><div class="chart-axis" id="chart-axis">Students / month</div></section>
+<details class="panel breakdown"><summary>Breakdown<span data-icon="chevron"></span></summary><div class="table-scroll"><table class="breakdown-table"><thead><tr><th>Monthly</th><th data-stack-name="current">Current</th><th data-stack-name="custom">Custom</th></tr></thead><tbody id="breakdown-body"></tbody></table></div><p class="calculation-note">Net = platform revenue − card fees − stack costs. Before salaries, development, and tax.</p></details>
+</div></div>
+</main>
+<dialog id="pricing-dialog"><div class="dialog-head"><h2 id="pricing-title">Video pricing</h2><button class="button icon-button" data-close="pricing-dialog" aria-label="Close video pricing">×</button></div><div id="pricing-body"></div></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+<script id="embedded-scenario" type="application/json">null</script>
+<script>"use strict";
+const DAILY_TIERS = [
+  {upTo: 10000, rate: 0}, {upTo: 100000, rate: .24},
+  {upTo: 500000, rate: .222}, {upTo: 1000000, rate: .204},
+  {upTo: 10000000, rate: .18}, {upTo: 25000000, rate: .156},
+  {upTo: 50000000, rate: .132}, {upTo: null, rate: .09},
+];
+function defaults() {
+  return {
+    version: 1, title: 'A new way to tutor', students: 250, frequency: 4,
+    minutes: 60, participants: 2, price: 80, card: 3,
+    studentGrowth: 5, sessionGrowth: 0, months: 12,
+    current: {name: 'Current stack', take: 20, software: 399, crm: 99, crmStudent: .6, infrastructure: 0, infraStudent: 0, other: .2, videoMode: 'flat', hourly: 1.2, tiers: structuredClone(DAILY_TIERS)},
+    custom: {name: 'Custom stack', take: 20, software: 0, crm: 25, crmStudent: 0, infrastructure: 75, infraStudent: .1, other: .05, videoMode: 'tiers', hourly: .24, tiers: structuredClone(DAILY_TIERS)},
+  };
+}
+const finite = (n, fallback, min, max) => typeof n === 'number' && Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback;
+function normalize(raw) {
+  const d = defaults();
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return d;
+  if (typeof raw.title === 'string') d.title = raw.title.slice(0, 80);
+  const bounds = {students:[0,1e7],frequency:[0,1000],minutes:[1,1440],participants:[1,1000],price:[0,1e6],card:[0,100],studentGrowth:[-50,100],sessionGrowth:[-50,100],months:[1,36]};
+  for (const [k,b] of Object.entries(bounds)) d[k] = finite(raw[k],d[k],...b);
+  d.students = Math.round(d.students); d.participants = Math.round(d.participants); d.months = Math.round(d.months);
+  for (const key of ['current','custom']) {
+    const r = raw[key]; if (!r || typeof r !== 'object') continue;
+    if (typeof r.name === 'string') d[key].name = r.name.slice(0, 40);
+    for (const k of ['take','software','crm','crmStudent','infrastructure','infraStudent','other','hourly']) d[key][k] = finite(r[k],d[key][k],0,k === 'take' ? 100 : 1e7);
+    d[key].videoMode = r.videoMode === 'flat' ? 'flat' : r.videoMode === 'tiers' ? 'tiers' : d[key].videoMode;
+    if (Array.isArray(r.tiers) && r.tiers.length >= 1 && r.tiers.length <= 16) {
+      const tiers = []; let previous = 0;
+      for (let i=0;i<r.tiers.length;i++) {
+        const t=r.tiers[i]; if (!t || typeof t !== 'object') break;
+        const last=i===r.tiers.length-1;
+        const upTo=last?null:finite(t.upTo,NaN,previous+1,1e12);
+        const rate=finite(t.rate,NaN,0,1e6);
+        if ((!last&&!Number.isFinite(upTo)) || !Number.isFinite(rate)) break;
+        tiers.push({upTo,rate}); previous=upTo;
+      }
+      if (tiers.length===r.tiers.length) d[key].tiers=tiers;
+    }
+  }
+  return d;
+}
+// Rates are dollars per participant-hour. Tier boundaries are total monthly
+// participant-minutes. Each band bills only the minutes inside that band.
+function videoCost(participantMinutes, stack) {
+  if (stack.videoMode === 'flat') return participantMinutes / 60 * stack.hourly;
+  let start=0, total=0;
+  for (const tier of stack.tiers) {
+    const end=tier.upTo ?? Infinity;
+    total += Math.max(0,Math.min(participantMinutes,end)-start)/60*tier.rate;
+    start=end;
+  }
+  return total;
+}
+function calculate(s, stack, students=s.students, frequency=s.frequency) {
+  const sessions=students*frequency;
+  const participantMinutes=sessions*s.minutes*s.participants;
+  const bookings=sessions*s.price;
+  const revenue=bookings*stack.take/100;
+  const processing=bookings*s.card/100;
+  const video=videoCost(participantMinutes,stack);
+  const crm=stack.crm+stack.crmStudent*students;
+  const infrastructure=stack.infrastructure+stack.infraStudent*students;
+  const other=stack.other*sessions;
+  const services=video+stack.software+crm+infrastructure+other;
+  return {students,sessions,participantMinutes,bookings,revenue,payouts:bookings-revenue,processing,video,software:stack.software,crm,infrastructure,other,services,totalCosts:services+processing,net:revenue-processing-services,costPerSession:sessions?services/sessions:null,margin:revenue?(revenue-processing-services)/revenue*100:null};
+}
+function project(s) {
+  return Array.from({length:s.months},(_,i)=>{
+    const students=s.students*Math.pow(1+s.studentGrowth/100,i);
+    const frequency=s.frequency*Math.pow(1+s.sessionGrowth/100,i);
+    return {month:i+1,current:calculate(s,s.current,students,frequency),custom:calculate(s,s.custom,students,frequency)};
+  });
+}
+
+const $=q=>document.querySelector(q), $$=q=>[...document.querySelectorAll(q)];
+const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=(n,d=0)=>n===null?'—':new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:d,maximumFractionDigits:d}).format(n);
+const num=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(n);
+const compact=n=>new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:1}).format(n);
+const icons={chevron:'<path d="m7 10 5 5 5-5"/>',edit:'<path d="m14 5 5 5m-14 9 4-1L20 7a2 2 0 0 0-3-3L6 15l-1 4z"/>'};
+const icon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
+$$('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));
+let loadError=false;
+function load(){
+  try{
+    const encoded=new URLSearchParams(location.hash.slice(1)).get('s');
+    if(encoded){if(encoded.length>40000)throw Error();return normalize(JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(encoded.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0)))));}
+    const embedded=JSON.parse($('#embedded-scenario').textContent);if(embedded)return normalize(embedded);
+    const saved=localStorage.getItem('sessionwise-scenario-v1');if(saved)return normalize(JSON.parse(saved));
+  }catch{loadError=true;}
+  return defaults();
+}
+let state=load(),view='scale',metric='services',pricingStack='custom',points=[],geometry={W:720,L:52,R:12},toastTimer;
+if(![12,24,36].includes(state.months))state.months=12;
+function toast(text){$('#toast').textContent=text;$('#toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').hidden=true,3000);}
+function get(path){return path.split('.').reduce((value,key)=>value[key],state);}
+function set(path,value){const p=path.split('.');if(p.length===2)state[p[0]][p[1]]=value;else state[p[0]]=value;}
+function sync(){
+  $$('[data-path]').forEach(el=>el.value=get(el.dataset.path));
+  $('#sessions').value=+(state.students*state.frequency).toFixed(4);
+}
+const fields=[['take','Revenue share','% of sales'],['software','Software','$ / month'],['crm','CRM','$ / month'],['crmStudent','CRM / student','$ / month'],['infrastructure','Hosting','$ / month'],['infraStudent','Hosting / student','$ / month'],['other','Other','$ / session']];
+function buildInputs(){
+  const row=([key,label,unit])=>`<tr><th scope="row">${label}<span class="row-unit">${unit}</span></th>${['current','custom'].map(stack=>`<td><input id="${stack}-${key}" data-path="${stack}.${key}" aria-label="${stack} ${label}" type="number" min="0" max="${key==='take'?100:10000000}" step="any" value="${state[stack][key]}"></td>`).join('')}</tr>`;
+  const video=`<tr><th scope="row">Video<span class="row-unit">$ / person-hour</span></th>${['current','custom'].map(key=>`<td><button class="video-button" data-video="${key}" aria-label="Edit ${key} video pricing"><span id="${key}-video-label"></span>${icon('edit')}</button></td>`).join('')}</tr>`;
+  $('#stack-inputs').innerHTML=row(fields[0])+video+fields.slice(1).map(row).join('');
+}
+function renderPricing(){
+  const s=state[pricingStack];
+  $('#pricing-title').textContent=`Video · ${s.name||pricingStack}`;
+  const tiers=s.tiers.map((tier,i)=>`<div class="tier-row"><input data-tier-index="${i}" data-tier-field="upTo" aria-label="Tier ${i+1} minute limit" type="${tier.upTo===null?'text':'number'}" ${tier.upTo===null?'readonly':''} min="1" max="1000000000000" step="1" value="${tier.upTo??'No limit'}"><input data-tier-index="${i}" data-tier-field="rate" aria-label="Tier ${i+1} hourly rate" type="number" min="0" max="1000000" step="any" value="${tier.rate}"><button data-remove-tier="${i}" aria-label="Remove tier ${i+1}" ${s.tiers.length===1?'disabled':''}>×</button></div>`).join('');
+  $('#pricing-body').innerHTML=`<label class="sr-only" for="pricing-mode">Pricing model</label><select id="pricing-mode" class="pricing-mode"><option value="flat" ${s.videoMode==='flat'?'selected':''}>Hourly rate</option><option value="tiers" ${s.videoMode==='tiers'?'selected':''}>Volume pricing</option></select>${s.videoMode==='flat'?`<label class="pricing-hourly" for="pricing-hourly">$ / person-hour<input id="pricing-hourly" type="number" data-path="${pricingStack}.hourly" min="0" max="10000000" step="any" value="${s.hourly}"></label>`:`<div class="tier-header"><span>Up to minutes / month</span><span>$ / person-hour</span><span></span></div><div id="tier-rows">${tiers}</div><p id="tier-error" class="tier-error" role="status" hidden></p><div class="tier-actions"><button id="add-tier" class="button" ${s.tiers.length>=16?'disabled':''}>+ Add tier</button><button id="load-daily" class="button">Use Daily rates</button></div><a class="daily-link" href="https://www.daily.co/pricing/video-sdk/" target="_blank" rel="noopener noreferrer">Daily rates ↗</a>`}<div class="pricing-foot"><span>Video / month</span><strong id="video-estimate">${money(calculate(state,s).video,2)}</strong></div>`;
+}
+function readTiers(){
+  let previous=0,error='';const rows=$$('#tier-rows .tier-row');
+  const tiers=rows.map((row,i)=>{
+    const limit=row.querySelector('[data-tier-field="upTo"]'),rate=row.querySelector('[data-tier-field="rate"]');
+    const upTo=i===rows.length-1?null:Number(limit.value),cost=Number(rate.value);
+    if(upTo!==null&&(!limit.value||!Number.isInteger(upTo)||upTo<=previous||upTo>1e12))error='Minute limits must increase with each tier.';
+    if(!rate.value||!Number.isFinite(cost)||cost<0||cost>1e6)error='Enter a valid hourly rate.';
+    previous=upTo;return{upTo,rate:cost};
+  });
+  $('#tier-error').hidden=!error;$('#tier-error').textContent=error;
+  if(!error){state[pricingStack].tiers=tiers;update();}
+}
+function update(){
+  const a=calculate(state,state.current),b=calculate(state,state.custom),difference=a.services-b.services;
+  $('#savings-label').textContent=difference>=0?'Monthly savings':'Monthly increase';
+  $('#savings-value').textContent=money(Math.abs(difference));$('#savings-value').classList.toggle('negative',difference<0);
+  $('#session-cost').textContent=money(b.costPerSession,2);
+  $('#custom-net').textContent=money(b.net);$('#custom-net').classList.toggle('negative',b.net<0);
+  $('#current-total').textContent=money(a.services);$('#custom-total').textContent=money(b.services);
+  for(const key of ['current','custom'])$('#'+key+'-video-label').textContent=state[key].videoMode==='tiers'?'Tiered':money(state[key].hourly,2);
+  $$('[data-stack-name]').forEach(el=>el.textContent=state[el.dataset.stackName].name||el.dataset.stackName);
+  if(document.activeElement!==$('#sessions'))$('#sessions').value=+(state.students*state.frequency).toFixed(4);
+  $('#sessions').disabled=state.students===0;
+  $('#sessions').title=state.students===0?'Add students first.':`${+(state.frequency).toFixed(2)} sessions per student`;
+  const rows=[['Session sales','bookings'],['Advisor payouts','payouts'],['Platform revenue','revenue'],[`Card fees · ${state.card}%`,'processing'],['Video','video'],['Software','software'],['CRM','crm'],['Hosting','infrastructure'],['Other','other'],['Stack costs','services'],['Net','net']];
+  $('#breakdown-body').innerHTML=rows.map(([label,key])=>`<tr><td>${esc(label)}</td><td class="${a[key]<0?'negative':''}">${money(a[key])}</td><td class="${b[key]<0?'negative':''}">${money(b[key])}</td></tr>`).join('');
+  if($('#video-estimate'))$('#video-estimate').textContent=money(calculate(state,state[pricingStack]).video,2);
+  renderChart();try{localStorage.setItem('sessionwise-scenario-v1',JSON.stringify(state));}catch{}
+}
+function renderChart(){
+  const time=view==='time',net=metric==='net';
+  $('#growth-settings').hidden=!time;
+  $('#chart-title').textContent=`${net?'Net':'Costs'} ${time?'over time':'at scale'}`;
+  $('#chart-axis').textContent=time?'Month':'Students / month';
+  const maxStudents=Math.ceil(Math.max(1000,state.students*5)/1000)*1000;
+  points=time?project(state).map(p=>({x:p.month,students:p.custom.students,a:p.current[metric],b:p.custom[metric]})):Array.from({length:101},(_,i)=>{const n=maxStudents*i/100;return{x:n,students:n,a:calculate(state,state.current,n)[metric],b:calculate(state,state.custom,n)[metric]};});
+  const narrow=$('#chart-container').clientWidth<500,W=narrow?450:720,H=320,L=54,R=14,T=20,B=38,pw=W-L-R,ph=H-T-B;
+  geometry={W,L,R};$('#chart').setAttribute('viewBox',`0 0 ${W} ${H}`);
+  let lo=Math.min(0,...points.flatMap(p=>[p.a,p.b])),hi=Math.max(1,...points.flatMap(p=>[p.a,p.b]));
+  const raw=(hi-lo)/4,pow=10**Math.floor(Math.log10(raw)),step=[1,2,2.5,5,10].map(n=>n*pow).find(n=>n>=raw)||pow*10;
+  lo=Math.floor(lo/step)*step;hi=Math.ceil(hi/step)*step;if(lo===hi)hi+=step;
+  const xMin=time?1:0,xMax=time?Math.max(2,state.months):maxStudents;
+  const x=v=>L+(v-xMin)/(xMax-xMin)*pw,y=v=>T+(hi-v)/(hi-lo)*ph;
+  let svg='';
+  for(let i=0;i<=4;i++){
+    const value=lo+(hi-lo)*i/4,py=y(value);
+    svg+=`<line x1="${L}" y1="${py}" x2="${W-R}" y2="${py}" stroke="#e9edf1" stroke-width="1"/><text x="${L-12}" y="${py+4}" text-anchor="end" fill="#a1aab5" font-size="11" font-family="system-ui">${value<0?'−':''}$${compact(Math.abs(value))}</text>`;
+    const vx=time?Math.round(1+(state.months-1)*i/4):maxStudents*i/4;
+    svg+=`<text x="${x(vx)}" y="${H-12}" text-anchor="middle" fill="#a1aab5" font-size="11" font-family="system-ui">${time?vx:compact(vx)}</text>`;
+  }
+  const path=key=>points.map((p,i)=>`${i?'L':'M'}${x(p.x).toFixed(2)},${y(p[key]).toFixed(2)}`).join(' ');
+  svg+=`<path d="${path('a')}" fill="none" stroke="#a0a9b6" stroke-width="2" stroke-dasharray="4 5"/><path d="${path('b')}" fill="none" stroke="#24856c" stroke-width="2.8" stroke-linejoin="round"/>`;
+  const mx=x(time?1:state.students),a=calculate(state,state.current)[metric],b=calculate(state,state.custom)[metric];
+  svg+=`<line x1="${mx}" y1="${T}" x2="${mx}" y2="${H-B}" stroke="#d6e3dd" stroke-dasharray="3 5"/><circle cx="${mx}" cy="${y(a)}" r="4" fill="#a0a9b6" stroke="#fff" stroke-width="2"/><circle cx="${mx}" cy="${y(b)}" r="4" fill="#24856c" stroke="#fff" stroke-width="2"/>`;
+  $('#chart').innerHTML=svg;$('#chart-tooltip').hidden=true;
+  $('#chart').setAttribute('aria-label',`${time?'Monthly growth projection':'Student volume comparison'}: ${net?'net':'costs'}. Current ${money(a)}; custom ${money(b)} monthly.`);
+}
+$('#chart').addEventListener('pointermove',event=>{
+  const {W,L,R}=geometry,r=$('#chart').getBoundingClientRect(),relative=(event.clientX-r.left)/r.width*W;
+  if(relative<L||relative>W-R){$('#chart-tooltip').hidden=true;return;}
+  const index=Math.max(0,Math.min(points.length-1,Math.round((relative-L)/(W-L-R)*(points.length-1)))),p=points[index],tip=$('#chart-tooltip');
+  tip.innerHTML=`<strong>${view==='time'?'Month '+p.x:num(p.x)+' students'}</strong><div class="current-text">${esc(state.current.name)} ${money(p.a)}</div><div class="custom-text">${esc(state.custom.name)} ${money(p.b)}</div>`;
+  tip.hidden=false;tip.style.left=`${Math.max(0,Math.min(r.width-tip.offsetWidth,event.clientX-r.left+12))}px`;
+});
+$('#chart').addEventListener('pointerleave',()=>$('#chart-tooltip').hidden=true);
+function commitNumber(el){
+  const path=el.dataset.path,n=el.value===''?get(path):Number(el.value),bounded=Math.max(Number(el.min),Math.min(Number(el.max),Number.isFinite(n)?n:get(path)));
+  set(path,['students','participants'].includes(path)?Math.round(bounded):bounded);el.value=get(path);update();
+}
+document.addEventListener('input',event=>{
+  const el=event.target;
+  if(el.hasAttribute('data-tier-index')){readTiers();return;}
+  if(el.id==='sessions'){
+    const n=Number(el.value),frequency=n/state.students;
+    if(el.value&&Number.isFinite(n)&&n>=0&&frequency<=1000&&state.students>0){state.frequency=frequency;el.setCustomValidity('');update();}
+    else el.setCustomValidity('Enter up to 1,000 sessions per student.');return;
+  }
+  const path=el.dataset.path;if(!path||el.tagName==='SELECT')return;
+  if(el.type==='number'){
+    if(el.value===''||!Number.isFinite(Number(el.value))||Number(el.value)<Number(el.min)||Number(el.value)>Number(el.max))return;
+    set(path,['students','participants'].includes(path)?Math.round(Number(el.value)):Number(el.value));
+  }else set(path,el.value);
+  update();
+});
+document.addEventListener('change',event=>{
+  const el=event.target;
+  if(el.id==='pricing-mode'){state[pricingStack].videoMode=el.value;renderPricing();update();return;}
+  if(el.id==='sessions'&&!el.checkValidity()){el.value=+(state.students*state.frequency).toFixed(4);el.setCustomValidity('');toast('Enter up to 1,000 sessions per student.');return;}
+  if(!el.dataset.path)return;
+  if(el.type==='number')commitNumber(el);
+  else if(el.tagName==='SELECT'){set(el.dataset.path,Number(el.value));update();}
+});
+document.addEventListener('click',event=>{
+  const button=event.target.closest('button');if(!button)return;
+  if(button.dataset.close)$('#'+button.dataset.close).close();
+  if(button.dataset.view){view=button.dataset.view;$$('[data-view]').forEach(el=>{el.classList.toggle('active',el===button);el.setAttribute('aria-pressed',String(el===button));});renderChart();}
+  if(button.dataset.video){pricingStack=button.dataset.video;renderPricing();$('#pricing-dialog').showModal();}
+  if(button.id==='add-tier'){
+    const tiers=state[pricingStack].tiers;if(tiers.length>=16)return;
+    const last=tiers.at(-1),previous=tiers.length>1?tiers.at(-2).upTo:0;
+    const end=Math.min(1e12,Math.max(previous+1,previous*2||10000));if(end<=previous)return;
+    last.upTo=end;tiers.push({upTo:null,rate:+(last.rate*.9).toFixed(4)});renderPricing();update();
+  }
+  if(button.hasAttribute('data-remove-tier')){const tiers=state[pricingStack].tiers;if(tiers.length<=1)return;tiers.splice(Number(button.dataset.removeTier),1);tiers.at(-1).upTo=null;renderPricing();update();}
+  if(button.id==='load-daily'){state[pricingStack].tiers=structuredClone(DAILY_TIERS);renderPricing();update();}
+});
+$('#chart-metric').addEventListener('change',e=>{metric=e.target.value;renderChart();});
+for(const dialog of $$('dialog'))dialog.addEventListener('click',e=>{if(e.target!==dialog)return;const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();});
+function restore(next){state=next;history.replaceState(null,'',location.pathname+location.search);buildInputs();sync();update();}
+$('#reset').addEventListener('click',()=>{restore(defaults());toast('Example reset');});
+window.addEventListener('resize',renderChart);
+buildInputs();sync();update();if(loadError)toast('Example loaded');
+
+</script></body></html>
