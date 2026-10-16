@@ -44,8 +44,8 @@ function defaults() {
     version: 1, title: 'A new way to tutor', students: 250, frequency: 4,
     minutes: 60, participants: 2, price: 80, card: 3,
     studentGrowth: 5, sessionGrowth: 0, months: 12,
-    current: {name: 'Current stack', take: 20, software: 399, crm: 99, crmStudent: .6, infrastructure: 0, infraStudent: 0, other: .2, videoMode: 'flat', hourly: 1.2, tiers: structuredClone(DAILY_TIERS)},
-    custom: {name: 'Custom stack', take: 20, software: 0, crm: 25, crmStudent: 0, infrastructure: 75, infraStudent: .1, other: .05, videoMode: 'tiers', hourly: .24, tiers: structuredClone(DAILY_TIERS)},
+    current: {name: 'Current stack', take: 20, software: 399, crm: 99, infrastructure: 0, other: .2, videoMode: 'flat', hourly: 1.2, tiers: structuredClone(DAILY_TIERS)},
+    custom: {name: 'Custom stack', take: 20, software: 0, crm: 25, infrastructure: 75, other: .05, videoMode: 'tiers', hourly: .24, tiers: structuredClone(DAILY_TIERS)},
   };
 }
 const finite = (n, fallback, min, max) => typeof n === 'number' && Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback;
@@ -59,7 +59,7 @@ function normalize(raw) {
   for (const key of ['current','custom']) {
     const r = raw[key]; if (!r || typeof r !== 'object') continue;
     if (typeof r.name === 'string') d[key].name = r.name.slice(0, 40);
-    for (const k of ['take','software','crm','crmStudent','infrastructure','infraStudent','other','hourly']) d[key][k] = finite(r[k],d[key][k],0,k === 'take' ? 100 : 1e7);
+    for (const k of ['take','software','crm','infrastructure','other','hourly']) d[key][k] = finite(r[k],d[key][k],0,k === 'take' ? 100 : 1e7);
     d[key].videoMode = r.videoMode === 'flat' ? 'flat' : r.videoMode === 'tiers' ? 'tiers' : d[key].videoMode;
     if (Array.isArray(r.tiers) && r.tiers.length >= 1 && r.tiers.length <= 16) {
       const tiers = []; let previous = 0;
@@ -95,8 +95,8 @@ function calculate(s, stack, students=s.students, frequency=s.frequency) {
   const revenue=bookings*stack.take/100;
   const processing=bookings*s.card/100;
   const video=videoCost(participantMinutes,stack);
-  const crm=stack.crm+stack.crmStudent*students;
-  const infrastructure=stack.infrastructure+stack.infraStudent*students;
+  const crm=stack.crm;
+  const infrastructure=stack.infrastructure;
   const other=stack.other*sessions;
   const services=video+stack.software+crm+infrastructure+other;
   return {students,sessions,participantMinutes,bookings,revenue,payouts:bookings-revenue,processing,video,software:stack.software,crm,infrastructure,other,services,totalCosts:services+processing,net:revenue-processing-services,costPerSession:sessions?services/sessions:null,margin:revenue?(revenue-processing-services)/revenue*100:null};
@@ -136,7 +136,7 @@ function sync(){
   $$('[data-path]').forEach(el=>el.value=get(el.dataset.path));
   $('#sessions').value=+(state.students*state.frequency).toFixed(4);
 }
-const fields=[['take','Revenue share','% of sales'],['software','Software','$ / month'],['crm','CRM','$ / month'],['crmStudent','CRM / student','$ / month'],['infrastructure','Hosting','$ / month'],['infraStudent','Hosting / student','$ / month'],['other','Other','$ / session']];
+const fields=[['take','Revenue share','% of sales'],['software','Software','$ / month'],['crm','CRM','$ / month'],['infrastructure','Hosting','$ / month'],['other','Other','$ / session']];
 function buildInputs(){
   const row=([key,label,unit])=>`<tr><th scope="row">${label}<span class="row-unit">${unit}</span></th>${['current','custom'].map(stack=>`<td><input id="${stack}-${key}" data-path="${stack}.${key}" aria-label="${stack} ${label}" type="number" min="0" max="${key==='take'?100:10000000}" step="any" value="${state[stack][key]}"></td>`).join('')}</tr>`;
   const video=`<tr><th scope="row">Video<span class="row-unit">$ / person-hour</span></th>${['current','custom'].map(key=>`<td><button class="video-button" data-video="${key}" aria-label="Edit ${key} video pricing"><span id="${key}-video-label"></span>${icon('edit')}</button></td>`).join('')}</tr>`;
