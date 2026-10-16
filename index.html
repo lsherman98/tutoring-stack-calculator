@@ -26,8 +26,7 @@
 <section class="panel stack-panel"><h2>Stack settings</h2><div class="stack-table-wrap"><table class="stack-table"><thead><tr><th><span class="sr-only">Setting</span></th><th><span class="dot current"></span><input id="current-name" data-path="current.name" aria-label="Current stack name" maxlength="40"></th><th><span class="dot custom"></span><input id="custom-name" data-path="custom.name" aria-label="Custom stack name" maxlength="40"></th></tr></thead><tbody id="stack-inputs"></tbody><tfoot><tr><th>Monthly costs</th><td id="current-total">—</td><td id="custom-total">—</td></tr></tfoot></table></div></section>
 <div class="results">
 <section class="metrics" aria-label="Monthly results"><div><span id="savings-label">Monthly savings</span><strong id="savings-value">—</strong></div><div><span>Custom cost / session</span><strong id="session-cost">—</strong></div><div><span>Custom net / month</span><strong id="custom-net">—</strong></div></section>
-<section class="panel chart-panel"><div class="chart-head"><h2 id="chart-title">Costs at scale</h2><div class="segmented" aria-label="Chart view"><button data-view="scale" class="active" aria-pressed="true">Scale</button><button data-view="time" aria-pressed="false">Time</button></div></div><div class="chart-toolbar"><div class="legend"><span><i class="dot current"></i><span data-stack-name="current">Current</span></span><span><i class="dot custom"></i><span data-stack-name="custom">Custom</span></span></div><label class="sr-only" for="chart-metric">Chart metric</label><select id="chart-metric"><option value="services">Costs</option><option value="net">Net revenue</option></select></div>
-<div id="growth-settings" class="growth-settings" hidden><label for="studentGrowth">Student growth / mo<input id="studentGrowth" data-path="studentGrowth" type="number" min="-50" max="100" step="any"><span>%</span></label><label for="sessionGrowth">Session frequency growth / mo<input id="sessionGrowth" data-path="sessionGrowth" type="number" min="-50" max="100" step="any"><span>%</span></label><label for="months">Period<select id="months" data-path="months"><option value="12">12 months</option><option value="24">24 months</option><option value="36">36 months</option></select></label></div>
+<section class="panel chart-panel"><div class="chart-head"><h2 id="chart-title">Costs at scale</h2></div><div class="chart-toolbar"><div class="legend"><span><i class="dot current"></i><span data-stack-name="current">Current</span></span><span><i class="dot custom"></i><span data-stack-name="custom">Custom</span></span></div><label class="sr-only" for="chart-metric">Chart metric</label><select id="chart-metric"><option value="services">Costs</option><option value="net">Net revenue</option></select></div>
 <div class="chart-container" id="chart-container"><svg id="chart" viewBox="0 0 720 320" role="img"></svg><div id="chart-tooltip" class="chart-tooltip" hidden></div></div><div class="chart-axis" id="chart-axis">Students / month</div></section>
 <details class="panel breakdown"><summary>Breakdown<span data-icon="chevron"></span></summary><div class="table-scroll"><table class="breakdown-table"><thead><tr><th>Monthly</th><th data-stack-name="current">Current</th><th data-stack-name="custom">Custom</th></tr></thead><tbody id="breakdown-body"></tbody></table></div><p class="calculation-note">Net = platform revenue − card fees − stack costs. Before salaries, development, and tax.</p></details>
 </div></div>
@@ -130,8 +129,7 @@ function load(){
   }catch{loadError=true;}
   return defaults();
 }
-let state=load(),view='scale',metric='services',pricingStack='custom',points=[],geometry={W:720,L:52,R:12},toastTimer;
-if(![12,24,36].includes(state.months))state.months=12;
+let state=load(),metric='services',pricingStack='custom',points=[],geometry={W:720,L:52,R:12},toastTimer;
 function toast(text){$('#toast').textContent=text;$('#toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').hidden=true,3000);}
 function get(path){return path.split('.').reduce((value,key)=>value[key],state);}
 function set(path,value){const p=path.split('.');if(p.length===2)state[p[0]][p[1]]=value;else state[p[0]]=value;}
@@ -180,38 +178,37 @@ function update(){
   renderChart();try{localStorage.setItem('sessionwise-scenario-v1',JSON.stringify(state));}catch{}
 }
 function renderChart(){
-  const time=view==='time',net=metric==='net';
-  $('#growth-settings').hidden=!time;
-  $('#chart-title').textContent=`${net?'Net':'Costs'} ${time?'over time':'at scale'}`;
-  $('#chart-axis').textContent=time?'Month':'Students / month';
+  const net=metric==='net';
+  $('#chart-title').textContent=`${net?'Net':'Costs'} at scale`;
+  $('#chart-axis').textContent='Students / month';
   const maxStudents=Math.ceil(Math.max(1000,state.students*5)/1000)*1000;
-  points=time?project(state).map(p=>({x:p.month,students:p.custom.students,a:p.current[metric],b:p.custom[metric]})):Array.from({length:101},(_,i)=>{const n=maxStudents*i/100;return{x:n,students:n,a:calculate(state,state.current,n)[metric],b:calculate(state,state.custom,n)[metric]};});
+  points=Array.from({length:101},(_,i)=>{const n=maxStudents*i/100;return{x:n,students:n,a:calculate(state,state.current,n)[metric],b:calculate(state,state.custom,n)[metric]};});
   const narrow=$('#chart-container').clientWidth<500,W=narrow?450:720,H=320,L=54,R=14,T=20,B=38,pw=W-L-R,ph=H-T-B;
   geometry={W,L,R};$('#chart').setAttribute('viewBox',`0 0 ${W} ${H}`);
   let lo=Math.min(0,...points.flatMap(p=>[p.a,p.b])),hi=Math.max(1,...points.flatMap(p=>[p.a,p.b]));
   const raw=(hi-lo)/4,pow=10**Math.floor(Math.log10(raw)),step=[1,2,2.5,5,10].map(n=>n*pow).find(n=>n>=raw)||pow*10;
   lo=Math.floor(lo/step)*step;hi=Math.ceil(hi/step)*step;if(lo===hi)hi+=step;
-  const xMin=time?1:0,xMax=time?Math.max(2,state.months):maxStudents;
+  const xMin=0,xMax=maxStudents;
   const x=v=>L+(v-xMin)/(xMax-xMin)*pw,y=v=>T+(hi-v)/(hi-lo)*ph;
   let svg='';
   for(let i=0;i<=4;i++){
     const value=lo+(hi-lo)*i/4,py=y(value);
     svg+=`<line x1="${L}" y1="${py}" x2="${W-R}" y2="${py}" stroke="#e9edf1" stroke-width="1"/><text x="${L-12}" y="${py+4}" text-anchor="end" fill="#a1aab5" font-size="11" font-family="system-ui">${value<0?'−':''}$${compact(Math.abs(value))}</text>`;
-    const vx=time?Math.round(1+(state.months-1)*i/4):maxStudents*i/4;
-    svg+=`<text x="${x(vx)}" y="${H-12}" text-anchor="middle" fill="#a1aab5" font-size="11" font-family="system-ui">${time?vx:compact(vx)}</text>`;
+    const vx=maxStudents*i/4;
+    svg+=`<text x="${x(vx)}" y="${H-12}" text-anchor="middle" fill="#a1aab5" font-size="11" font-family="system-ui">${compact(vx)}</text>`;
   }
   const path=key=>points.map((p,i)=>`${i?'L':'M'}${x(p.x).toFixed(2)},${y(p[key]).toFixed(2)}`).join(' ');
   svg+=`<path d="${path('a')}" fill="none" stroke="#a0a9b6" stroke-width="2" stroke-dasharray="4 5"/><path d="${path('b')}" fill="none" stroke="#24856c" stroke-width="2.8" stroke-linejoin="round"/>`;
-  const mx=x(time?1:state.students),a=calculate(state,state.current)[metric],b=calculate(state,state.custom)[metric];
+  const mx=x(state.students),a=calculate(state,state.current)[metric],b=calculate(state,state.custom)[metric];
   svg+=`<line x1="${mx}" y1="${T}" x2="${mx}" y2="${H-B}" stroke="#d6e3dd" stroke-dasharray="3 5"/><circle cx="${mx}" cy="${y(a)}" r="4" fill="#a0a9b6" stroke="#fff" stroke-width="2"/><circle cx="${mx}" cy="${y(b)}" r="4" fill="#24856c" stroke="#fff" stroke-width="2"/>`;
   $('#chart').innerHTML=svg;$('#chart-tooltip').hidden=true;
-  $('#chart').setAttribute('aria-label',`${time?'Monthly growth projection':'Student volume comparison'}: ${net?'net':'costs'}. Current ${money(a)}; custom ${money(b)} monthly.`);
+  $('#chart').setAttribute('aria-label',`Student volume comparison: ${net?'net':'costs'}. Current ${money(a)}; custom ${money(b)} monthly.`);
 }
 $('#chart').addEventListener('pointermove',event=>{
   const {W,L,R}=geometry,r=$('#chart').getBoundingClientRect(),relative=(event.clientX-r.left)/r.width*W;
   if(relative<L||relative>W-R){$('#chart-tooltip').hidden=true;return;}
   const index=Math.max(0,Math.min(points.length-1,Math.round((relative-L)/(W-L-R)*(points.length-1)))),p=points[index],tip=$('#chart-tooltip');
-  tip.innerHTML=`<strong>${view==='time'?'Month '+p.x:num(p.x)+' students'}</strong><div class="current-text">${esc(state.current.name)} ${money(p.a)}</div><div class="custom-text">${esc(state.custom.name)} ${money(p.b)}</div>`;
+  tip.innerHTML=`<strong>${num(p.x)+' students'}</strong><div class="current-text">${esc(state.current.name)} ${money(p.a)}</div><div class="custom-text">${esc(state.custom.name)} ${money(p.b)}</div>`;
   tip.hidden=false;tip.style.left=`${Math.max(0,Math.min(r.width-tip.offsetWidth,event.clientX-r.left+12))}px`;
 });
 $('#chart').addEventListener('pointerleave',()=>$('#chart-tooltip').hidden=true);
@@ -239,7 +236,6 @@ document.addEventListener('change',event=>{
 document.addEventListener('click',event=>{
   const button=event.target.closest('button');if(!button)return;
   if(button.dataset.close)$('#'+button.dataset.close).close();
-  if(button.dataset.view){view=button.dataset.view;$$('[data-view]').forEach(el=>{el.classList.toggle('active',el===button);el.setAttribute('aria-pressed',String(el===button));});renderChart();}
   if(button.dataset.video){pricingStack=button.dataset.video;renderPricing();$('#pricing-dialog').showModal();}
   if(button.id==='add-tier'){
     const tiers=state[pricingStack].tiers;if(tiers.length>=16)return;
