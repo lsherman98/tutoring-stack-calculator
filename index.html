@@ -28,7 +28,7 @@
 <section class="metrics" aria-label="Monthly results"><div><span id="savings-label">Monthly savings</span><strong id="savings-value">—</strong></div><div><span>Custom cost / session</span><strong id="session-cost">—</strong></div><div><span>Custom net / month</span><strong id="custom-net">—</strong></div></section>
 <section class="panel chart-panel"><div class="chart-head"><h2 id="chart-title">Costs at scale</h2></div><div class="chart-toolbar"><div class="legend"><span><i class="dot current"></i><span data-stack-name="current">Current</span></span><span><i class="dot custom"></i><span data-stack-name="custom">Custom</span></span></div><label class="sr-only" for="chart-metric">Chart metric</label><select id="chart-metric"><option value="services">Costs</option><option value="net">Net revenue</option></select></div>
 <div class="chart-container" id="chart-container"><svg id="chart" viewBox="0 0 720 320" role="img"></svg><div id="chart-tooltip" class="chart-tooltip" hidden></div></div><div class="chart-axis" id="chart-axis">Students / month</div></section>
-<details class="panel breakdown"><summary>Breakdown<span data-icon="chevron"></span></summary><div class="table-scroll"><table class="breakdown-table"><thead><tr><th>Monthly</th><th data-stack-name="current">Current</th><th data-stack-name="custom">Custom</th></tr></thead><tbody id="breakdown-body"></tbody></table></div><p class="calculation-note">Net = platform revenue − card fees − stack costs. Before salaries, development, and tax.</p></details>
+<details class="panel breakdown"><summary>Breakdown<span data-icon="chevron"></span></summary><div class="table-scroll"><table class="breakdown-table"><thead><tr><th>Monthly</th><th data-stack-name="current">Current</th><th data-stack-name="custom">Custom</th></tr></thead><tbody id="breakdown-body"></tbody></table></div><p class="calculation-note">Revenue share applies after card fees. Net = platform revenue − stack costs. Before salaries, development, and tax.</p></details>
 </div></div>
 </main>
 <dialog id="pricing-dialog"><div class="dialog-head"><h2 id="pricing-title">Video pricing</h2><button class="button icon-button" data-close="pricing-dialog" aria-label="Close video pricing">×</button></div><div id="pricing-body"></div></dialog>
@@ -94,14 +94,14 @@ function calculate(s, stack, students=s.students, frequency=s.frequency) {
   const sessions=students*frequency;
   const participantMinutes=sessions*s.minutes*s.participants;
   const bookings=sessions*s.price;
-  const revenue=bookings*stack.take/100;
   const processing=bookings*s.card/100;
+  const revenue=(bookings-processing)*stack.take/100;
   const video=videoCost(participantMinutes,stack);
   const crm=stack.crm;
   const infrastructure=stack.infrastructure;
   const other=stack.other*sessions;
   const services=video+stack.software+crm+infrastructure+other;
-  return {students,sessions,participantMinutes,bookings,revenue,payouts:bookings-revenue,processing,video,software:stack.software,crm,infrastructure,other,services,totalCosts:services+processing,net:revenue-processing-services,costPerSession:sessions?services/sessions:null,margin:revenue?(revenue-processing-services)/revenue*100:null};
+  return {students,sessions,participantMinutes,bookings,revenue,payouts:bookings-processing-revenue,processing,video,software:stack.software,crm,infrastructure,other,services,totalCosts:services+processing,net:revenue-services,costPerSession:sessions?services/sessions:null,margin:revenue?(revenue-services)/revenue*100:null};
 }
 function project(s) {
   return Array.from({length:s.months},(_,i)=>{
@@ -136,7 +136,7 @@ function set(path,value){const p=path.split('.');if(p.length===2)state[p[0]][p[1
 function sync(){
   $$('[data-path]').forEach(el=>el.value=get(el.dataset.path));
 }
-const fields=[['take','Revenue share','% of sales'],['software','Software','$ / month'],['crm','CRM','$ / month'],['infrastructure','Hosting','$ / month'],['other','Other','$ / session']];
+const fields=[['take','Revenue share','% after card fees'],['software','Software','$ / month'],['crm','CRM','$ / month'],['infrastructure','Hosting','$ / month'],['other','Other','$ / session']];
 function buildInputs(){
   const row=([key,label,unit])=>`<tr><th scope="row">${label}<span class="row-unit">${unit}</span></th>${['current','custom'].map(stack=>`<td><input id="${stack}-${key}" data-path="${stack}.${key}" aria-label="${stack} ${label}" type="number" min="0" max="${key==='take'?100:10000000}" step="any" value="${state[stack][key]}"></td>`).join('')}</tr>`;
   const video=`<tr><th scope="row">Video<span class="row-unit">$ / person-hour</span></th>${['current','custom'].map(key=>`<td><button class="video-button" data-video="${key}" aria-label="Edit ${key} video pricing"><span id="${key}-video-label"></span>${icon('edit')}</button></td>`).join('')}</tr>`;
@@ -172,7 +172,7 @@ function update(){
   $('#current-total').textContent=money(a.services);$('#custom-total').textContent=money(b.services);
   for(const key of ['current','custom'])$('#'+key+'-video-label').textContent=state[key].videoMode==='tiers'?'Tiered':money(state[key].hourly,2);
   $$('[data-stack-name]').forEach(el=>el.textContent=state[el.dataset.stackName].name||el.dataset.stackName);
-  const rows=[['Session sales','bookings'],['Advisor payouts','payouts'],['Platform revenue','revenue'],[`Card fees · ${state.card}%`,'processing'],['Video','video'],['Software','software'],['CRM','crm'],['Hosting','infrastructure'],['Other','other'],['Stack costs','services'],['Net','net']];
+  const rows=[['Session sales','bookings'],[`Card fees · ${state.card}%`,'processing'],['Advisor payouts','payouts'],['Platform revenue','revenue'],['Video','video'],['Software','software'],['CRM','crm'],['Hosting','infrastructure'],['Other','other'],['Stack costs','services'],['Net','net']];
   $('#breakdown-body').innerHTML=rows.map(([label,key])=>`<tr><td>${esc(label)}</td><td class="${a[key]<0?'negative':''}">${money(a[key])}</td><td class="${b[key]<0?'negative':''}">${money(b[key])}</td></tr>`).join('');
   if($('#video-estimate'))$('#video-estimate').textContent=money(calculate(state,state[pricingStack]).video,2);
   renderChart();try{localStorage.setItem('sessionwise-scenario-v1',JSON.stringify(state));}catch{}
