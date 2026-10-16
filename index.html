@@ -9,12 +9,14 @@
 @media(max-width:480px){main{padding:21px 16px 32px}h1{font-size:20px}header .muted{font-size:10px}.actions{gap:5px}.button{font-size:11px;padding:7px 10px;min-height:32px}.icon-button{width:30px;padding:5px}.volume{grid-template-columns:1fr 1fr;padding:17px 0;row-gap:20px}.volume>label{padding:0 19px;font-size:10px}.volume>label:nth-child(2){border-right:0}.volume input{font-size:27px;margin-top:5px}.bare-input>span{margin-top:5px}.metrics{gap:10px;margin:0 0 20px}.metrics span{font-size:9px;line-height:1.5}.metrics strong{font-size:23px;letter-spacing:-.9px}.metrics>div{padding-right:7px}.chart-panel{padding:17px 15px 13px}.chart-head h2{font-size:12px}.legend{font-size:10px;gap:13px}.legend>span>span{max-width:95px}.chart-toolbar{margin-top:20px}.chart-axis{font-size:9px}.settings-grid{grid-template-columns:1fr 1fr;gap:10px;justify-content:normal}.settings-grid label{font-size:10px}.settings-grid input{font-size:12px}.stack-panel{padding:20px 17px}.stack-table{font-size:11px}.stack-table thead th:first-child{width:40%}.stack-table thead th:not(:first-child){width:30%}.stack-table thead input{font-size:11px}.stack-table td input{font-size:12px;padding:8px}.stack-table td,.stack-table tbody th{padding-top:8px;padding-bottom:8px}.video-button{font-size:10px}.stack-table tfoot td{font-size:14px}.row-unit{font-size:9px}.growth-settings{grid-template-columns:1fr 1fr;padding:10px}.growth-settings label:last-child{grid-column:1/-1}.growth-settings label{font-size:8px}.table-scroll{padding:0 15px}.breakdown-table{font-size:10px}.calculation-note{padding:10px 15px 16px;font-size:9px}.breakdown-table th:first-child,.breakdown-table td:first-child{width:47%}dialog{padding:19px}.tier-header{font-size:9px}.tier-row input{font-size:11px}.share-url{flex-direction:column}.dialog-head h2{font-size:15px}}
 .volume>label{display:flex;flex-direction:column;justify-content:space-between}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.volume input[type=range]{appearance:auto;-webkit-appearance:auto;width:100%;height:18px;padding:0;margin-top:7px;accent-color:var(--green);cursor:pointer;letter-spacing:normal}
 </style>
 </head>
 <body><main>
 <header><div><h1>Stack calculator</h1><span class="muted">USD · Example inputs</span></div><button id="reset" class="button">Reset</button></header>
 <section class="volume" aria-label="Monthly usage">
-<label for="students">Students<input id="students" data-path="students" type="number" min="0" max="10000000" step="1"></label>
+<label for="students">Students<input id="students" data-path="students" type="number" min="0" max="10000000" step="1"><input id="students-slider" data-path="students" aria-label="Number of students" type="range" min="0" max="10000" step="1"></label>
 <label for="frequency">Avg. sessions / student / month<input id="frequency" data-path="frequency" type="number" min="0" max="1000" step="any"></label>
 <label for="price">Price / session<div class="bare-input"><span>$</span><input id="price" data-path="price" type="number" min="0" max="1000000" step="any"></div></label>
 <label for="minutes">Minutes / session<input id="minutes" data-path="minutes" type="number" min="1" max="1440" step="any"></label>
@@ -161,6 +163,9 @@ function readTiers(){
   if(!error){state[pricingStack].tiers=tiers;update();}
 }
 function update(){
+  $('#students-slider').max=Math.max(10000,state.students);
+  $('#students-slider').value=state.students;
+  $('#students').value=state.students;
   const a=calculate(state,state.current),b=calculate(state,state.custom),difference=a.services-b.services;
   $('#savings-label').textContent=difference>=0?'Monthly savings':'Monthly increase';
   $('#savings-value').textContent=money(Math.abs(difference));$('#savings-value').classList.toggle('negative',difference<0);
@@ -218,7 +223,7 @@ document.addEventListener('input',event=>{
   const el=event.target;
   if(el.hasAttribute('data-tier-index')){readTiers();return;}
   const path=el.dataset.path;if(!path||el.tagName==='SELECT')return;
-  if(el.type==='number'){
+  if((el.type==='number'||el.type==='range')){
     if(el.value===''||!Number.isFinite(Number(el.value))||Number(el.value)<Number(el.min)||Number(el.value)>Number(el.max))return;
     set(path,['students','participants'].includes(path)?Math.round(Number(el.value)):Number(el.value));
   }else set(path,el.value);
@@ -228,7 +233,7 @@ document.addEventListener('change',event=>{
   const el=event.target;
   if(el.id==='pricing-mode'){state[pricingStack].videoMode=el.value;renderPricing();update();return;}
   if(!el.dataset.path)return;
-  if(el.type==='number')commitNumber(el);
+  if((el.type==='number'||el.type==='range'))commitNumber(el);
   else if(el.tagName==='SELECT'){set(el.dataset.path,Number(el.value));update();}
 });
 document.addEventListener('click',event=>{
