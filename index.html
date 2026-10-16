@@ -7,6 +7,7 @@
 @media(max-width:1050px){main{padding:28px 23px 40px}.layout{grid-template-columns:350px minmax(0,1fr);gap:18px}.stack-panel{padding:18px 15px}.stack-table thead th:first-child{width:40%}.stack-table thead th:not(:first-child){width:30%}.metrics{gap:10px}.metrics span{font-size:10px}.metrics strong{font-size:25px}.chart-panel{padding:18px 17px 13px}.legend{gap:12px;font-size:10px}.legend>span>span{max-width:90px}.growth-settings{grid-template-columns:1fr 1fr;gap:10px}.growth-settings label:last-child{grid-column:1/-1}}
 @media(max-width:800px){main{padding:23px 19px 35px}header{margin-bottom:22px}h1{font-size:21px}.layout{grid-template-columns:1fr;gap:25px}.results{grid-row:1}.metrics{margin-bottom:22px;padding:0;gap:17px}.metrics span{font-size:11px}.metrics strong{font-size:27px}.chart-panel{padding:18px 20px 14px}.legend{font-size:11px}.legend>span>span{max-width:130px}.volume{padding:18px 0}.volume>label{padding:0 18px;font-size:10px}.volume input{font-size:25px}.bare-input>span{font-size:21px}.stack-panel{padding:20px}.stack-table{font-size:12px}.stack-table thead input{font-size:12px}.stack-table td input{font-size:13px}.stack-table td,.stack-table tbody th{padding-top:9px;padding-bottom:9px}.stack-table tfoot td{font-size:16px}.stack-table thead th:first-child{width:44%}.stack-table thead th:not(:first-child){width:28%}.common-settings{margin-bottom:22px}}
 @media(max-width:480px){main{padding:21px 16px 32px}h1{font-size:20px}header .muted{font-size:10px}.actions{gap:5px}.button{font-size:11px;padding:7px 10px;min-height:32px}.icon-button{width:30px;padding:5px}.volume{grid-template-columns:1fr 1fr;padding:17px 0;row-gap:20px}.volume>label{padding:0 19px;font-size:10px}.volume>label:nth-child(2){border-right:0}.volume input{font-size:27px;margin-top:5px}.bare-input>span{margin-top:5px}.metrics{gap:10px;margin:0 0 20px}.metrics span{font-size:9px;line-height:1.5}.metrics strong{font-size:23px;letter-spacing:-.9px}.metrics>div{padding-right:7px}.chart-panel{padding:17px 15px 13px}.chart-head h2{font-size:12px}.legend{font-size:10px;gap:13px}.legend>span>span{max-width:95px}.chart-toolbar{margin-top:20px}.chart-axis{font-size:9px}.settings-grid{grid-template-columns:1fr 1fr;gap:10px;justify-content:normal}.settings-grid label{font-size:10px}.settings-grid input{font-size:12px}.stack-panel{padding:20px 17px}.stack-table{font-size:11px}.stack-table thead th:first-child{width:40%}.stack-table thead th:not(:first-child){width:30%}.stack-table thead input{font-size:11px}.stack-table td input{font-size:12px;padding:8px}.stack-table td,.stack-table tbody th{padding-top:8px;padding-bottom:8px}.video-button{font-size:10px}.stack-table tfoot td{font-size:14px}.row-unit{font-size:9px}.growth-settings{grid-template-columns:1fr 1fr;padding:10px}.growth-settings label:last-child{grid-column:1/-1}.growth-settings label{font-size:8px}.table-scroll{padding:0 15px}.breakdown-table{font-size:10px}.calculation-note{padding:10px 15px 16px;font-size:9px}.breakdown-table th:first-child,.breakdown-table td:first-child{width:47%}dialog{padding:19px}.tier-header{font-size:9px}.tier-row input{font-size:11px}.share-url{flex-direction:column}.dialog-head h2{font-size:15px}}
+.volume>label{display:flex;flex-direction:column;justify-content:space-between}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -14,7 +15,7 @@
 <header><div><h1>Stack calculator</h1><span class="muted">USD · Example inputs</span></div><button id="reset" class="button">Reset</button></header>
 <section class="volume" aria-label="Monthly usage">
 <label for="students">Students<input id="students" data-path="students" type="number" min="0" max="10000000" step="1"></label>
-<label for="sessions">Sessions / month<input id="sessions" type="number" min="0" max="10000000000" step="any"></label>
+<label for="frequency">Avg. sessions / student / month<input id="frequency" data-path="frequency" type="number" min="0" max="1000" step="any"></label>
 <label for="price">Price / session<div class="bare-input"><span>$</span><input id="price" data-path="price" type="number" min="0" max="1000000" step="any"></div></label>
 <label for="minutes">Minutes / session<input id="minutes" data-path="minutes" type="number" min="1" max="1440" step="any"></label>
 </section>
@@ -134,7 +135,6 @@ function get(path){return path.split('.').reduce((value,key)=>value[key],state);
 function set(path,value){const p=path.split('.');if(p.length===2)state[p[0]][p[1]]=value;else state[p[0]]=value;}
 function sync(){
   $$('[data-path]').forEach(el=>el.value=get(el.dataset.path));
-  $('#sessions').value=+(state.students*state.frequency).toFixed(4);
 }
 const fields=[['take','Revenue share','% of sales'],['software','Software','$ / month'],['crm','CRM','$ / month'],['infrastructure','Hosting','$ / month'],['other','Other','$ / session']];
 function buildInputs(){
@@ -169,9 +169,6 @@ function update(){
   $('#current-total').textContent=money(a.services);$('#custom-total').textContent=money(b.services);
   for(const key of ['current','custom'])$('#'+key+'-video-label').textContent=state[key].videoMode==='tiers'?'Tiered':money(state[key].hourly,2);
   $$('[data-stack-name]').forEach(el=>el.textContent=state[el.dataset.stackName].name||el.dataset.stackName);
-  if(document.activeElement!==$('#sessions'))$('#sessions').value=+(state.students*state.frequency).toFixed(4);
-  $('#sessions').disabled=state.students===0;
-  $('#sessions').title=state.students===0?'Add students first.':`${+(state.frequency).toFixed(2)} sessions per student`;
   const rows=[['Session sales','bookings'],['Advisor payouts','payouts'],['Platform revenue','revenue'],[`Card fees · ${state.card}%`,'processing'],['Video','video'],['Software','software'],['CRM','crm'],['Hosting','infrastructure'],['Other','other'],['Stack costs','services'],['Net','net']];
   $('#breakdown-body').innerHTML=rows.map(([label,key])=>`<tr><td>${esc(label)}</td><td class="${a[key]<0?'negative':''}">${money(a[key])}</td><td class="${b[key]<0?'negative':''}">${money(b[key])}</td></tr>`).join('');
   if($('#video-estimate'))$('#video-estimate').textContent=money(calculate(state,state[pricingStack]).video,2);
@@ -220,11 +217,6 @@ function commitNumber(el){
 document.addEventListener('input',event=>{
   const el=event.target;
   if(el.hasAttribute('data-tier-index')){readTiers();return;}
-  if(el.id==='sessions'){
-    const n=Number(el.value),frequency=n/state.students;
-    if(el.value&&Number.isFinite(n)&&n>=0&&frequency<=1000&&state.students>0){state.frequency=frequency;el.setCustomValidity('');update();}
-    else el.setCustomValidity('Enter up to 1,000 sessions per student.');return;
-  }
   const path=el.dataset.path;if(!path||el.tagName==='SELECT')return;
   if(el.type==='number'){
     if(el.value===''||!Number.isFinite(Number(el.value))||Number(el.value)<Number(el.min)||Number(el.value)>Number(el.max))return;
@@ -235,7 +227,6 @@ document.addEventListener('input',event=>{
 document.addEventListener('change',event=>{
   const el=event.target;
   if(el.id==='pricing-mode'){state[pricingStack].videoMode=el.value;renderPricing();update();return;}
-  if(el.id==='sessions'&&!el.checkValidity()){el.value=+(state.students*state.frequency).toFixed(4);el.setCustomValidity('');toast('Enter up to 1,000 sessions per student.');return;}
   if(!el.dataset.path)return;
   if(el.type==='number')commitNumber(el);
   else if(el.tagName==='SELECT'){set(el.dataset.path,Number(el.value));update();}
